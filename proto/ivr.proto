@@ -67,20 +67,28 @@ message PlatformMessage {
 
     //@@ string(s) containing additional metadata about the call
     repeated string metadata = 5;
+
+    //@@ string containg content type which will remain constant throughout call
+    string content_type = 6;
   }
 
   //@@ FC will send a stream of these messages to the application in order
   //@@ to deliver a real-time audio feed from the call over this stream
   //@@ FC will send audio messages in the format specified in the AudioStream
-  //@@ PerCL command (either `audio/l16;rate=8000` or `audio/mulaw;rate=8000`)
+  //@@ PERCL command (one of `audio/l16;rate=8000`, `audio/mulaw;rate=8000`, `audio/l16;rate=16000`)
   //@@ audio/l16;rate=8000    = 320 bytes
   //@@ audio/mulaw;rate=8000  = 160 bytes
+  //@@ audio/l16;rate=16000   = 640 bytes
   message NotifyAudioMessage {
+    reserved 2, 5;
     bytes audio_data = 1;
-    string content_type = 2;
+    //@@ removing from api as content_type is set at the call level
+    //@@ string content_type = 2;
     google.protobuf.Timestamp start_tstamp = 3;
     google.protobuf.Timestamp end_tstamp = 4;
-    uint32 size_bytes = 5;
+    //@@ removing from api as this is unnecessary as the size is known
+    //@@ from the audio_data
+    //@@ uint32 size_bytes = 5;
     uint32 sequence_num = 6;
   }
 
@@ -178,10 +186,6 @@ message PlatformMessage {
     google.protobuf.Timestamp timestamp = 2;
   }
 
-  //@@ FC will send one of these messages in the event that an error has 
-  //@@ occurred. The message should indicate what the issue was and this 
-  //@@ message should be sent temporally close to the message that caused 
-  //@@ the error.
   message NotifyErrorMessage {
     string error_message = 1;
     string error_id = 2;
@@ -213,13 +217,14 @@ message AppMessage {
   //@@ NotifyAudioPlayback[Started|Ended]Message requests to the
   //@@ application on this RPC stream
   //@@
-  //@@ This must be the same content-type as defined in the inital PerCL message
-  //@@ which establishes the AudioStream
+  //@@ This must be the same sample rate as defined in the inital PerCL message
+  //@@ which establishes the AudioStream, transcoding can occur between l16 and mulaw
   message PlayAudioMessage {
+    reserved 4;
     string id = 1;
     bytes audio_data = 2;
     string content_type = 3;
-    uint32 size_bytes = 4;
+    //@@uint32 size_bytes = 4;
     uint32 sequence_num = 5;
     bool last_message = 6;
   }

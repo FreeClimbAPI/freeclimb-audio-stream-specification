@@ -12,6 +12,7 @@ import ivr_pb2_grpc
 class IVRServicer(ivr_pb2_grpc.GRPCStreamServiceServicer):
     def SendIVRData(self, request_iterator: Iterator[PlatformMessage], context) -> Iterator[AppMessage]:
         print("Starting to handle streaming grpc connection")
+        content_type = ""
         try:
             p_message: ivr_pb2.PlatformMessage
             for p_message in request_iterator:
@@ -19,12 +20,16 @@ class IVRServicer(ivr_pb2_grpc.GRPCStreamServiceServicer):
                 match payload:
                     case "notify_audio_data":
                         print(f"Received Notify Audio Data message, seq: {p_message.notify_audio_data.sequence_num}")
-                        yield AppMessage(audio_data=AppMessage.PlayAudioMessage(id="testing", audio_data=p_message.notify_audio_data.audio_data, content_type=p_message.notify_audio_data.content_type, size_bytes=p_message.notify_audio_data.size_bytes, sequence_num=p_message.notify_audio_data.sequence_num))
+                        if content_type:
+                            yield AppMessage(audio_data=AppMessage.PlayAudioMessage(id="testing", audio_data=p_message.notify_audio_data.audio_data, content_type=content_type, sequence_num=p_message.notify_audio_data.sequence_num))
+                        else:
+                            print("ERROR: content type missing")
                     case "notify_dtmf_received_end_data":
                         print("Received Notify DTMF Recieved End message, DTMF finished: {p_message.notify_dtmf_received_end_data.digit}")
                         yield AppMessage(dtmf_data=AppMessage.PressDTMFMessage(id="echo", dtmf_digits=p_message.notify_dtmf_received_end_data.digit, press_duration_ms=100, break_duration_ms=100, sequence_num=1))
                     case "notify_call_started":
-                        print(f"Received Notify Call Started message, Call ID: {p_message.notify_call_started.call_id}")
+                        print(f"Received Notify Call Started message, Call ID: {p_message.notify_call_started.call_id} Content Type: {p_message.notify_call_started.content_type}")
+                        content_type = p_message.notify_call_started.content_type
                     case "notify_call_ended":
                         print(f"Received Notify Call Ended message, Call ID: {p_message.notify_call_ended.call_id} Code: {str(p_message.notify_call_ended.reason_code)} Reason: {p_message.notify_call_ended.reason}")
                     case _:
