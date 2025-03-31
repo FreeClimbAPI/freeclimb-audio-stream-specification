@@ -17,18 +17,69 @@
 1. Run gRPC server component to be exposed
 
     ```bash
-    git clone https://github.com/freeclimbapi/freeclimb-protobuf-specification
-    cd freeclimb-protobuf-specification/examples/python/server
+    git clone https://github.com/freeclimbapi/freeclimb-audio-stream-specification
+    cd freeclimb-audio-stream-specification/examples/python/server
     ./setup.sh
     ```
 
 2. Configure PerCL server to serve AudioStream PerCL command pointing at gRPC component
 
     ```bash
-    cd freeclimb-protobuf-specification/examples/python/server
+    cd freeclimb-audio-stream-specification/examples/python/server
     source venv/bin/activate
     WEBHOOK_HOST=<url for this webserver> AUDIO_STREAM_HOST=<host and port of grpc server> python3 webserver.py
     ```
+
+## Steps for javascript example application
+
+1. Install npm packages
+    ```bash
+    cd freeclimb-audio-stream-specification/examples/javascript
+    npm install
+    ```
+
+2. Setup .env file
+    ```
+    WEBHOOK_HOST=URL
+    AUDIO_STREAM_HOST=URL
+    gRPC_PORT=50051
+    ```
+    
+2. Start webserver in one terminal instance
+    ```bash
+    cd freeclimb-audio-stream-specification/examples/javascript
+    node server.js
+    ```
+
+3. Start gRPC server in another terminal instance
+    ```bash
+    cd freeclimb-audio-stream-specification/examples/javascript
+    node grpcServer.js
+    ```
+
+4. Call phone number configured in application. Should see console log messages in grpc server terminal and webserver terminal
+
+## Steps for go example application
+
+1. Install packages
+    ```bash
+    cd freeclimb-audio-stream-specification/examples/go
+    go mod tidy
+    ```
+    
+2. Start webserver in one terminal instance
+    ```bash
+    cd freeclimb-audio-stream-specification/examples/javascript
+    WEBHOOK_HOST=<url for this webserver> AUDIO_STREAM_HOST=<host and port of grpc server> go run main.go
+    ```
+
+3. Start gRPC server in another terminal instance
+    ```bash
+    cd freeclimb-audio-stream-specification/examples/javascript
+    go run main.go
+    ```
+
+4. Call phone number configured in application. Should see console log messages in grpc server terminal and webserver terminal
 
 ## ngrok
 
