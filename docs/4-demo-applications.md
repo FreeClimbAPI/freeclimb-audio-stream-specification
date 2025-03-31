@@ -50,7 +50,7 @@
     ngrok start grpc http
 
     # from the output you will need both tunnels to add to the WEBHOOK_HOST and AUDIO_STREAM_HOST above
-    # note that you may need to setup a https url and a forward that forwards url from the https url to the ngrok tcp url
+    # note that you may need to setup a proxy on a public ip listening on port 443 to forward the GRPC traffic to your local development environment
     ```
 
 ## Direct Access
