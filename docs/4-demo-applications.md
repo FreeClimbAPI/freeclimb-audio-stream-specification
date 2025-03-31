@@ -69,13 +69,13 @@
     
 2. Start webserver in one terminal instance
     ```bash
-    cd freeclimb-audio-stream-specification/examples/javascript
+    cd freeclimb-audio-stream-specification/examples/go
     WEBHOOK_HOST=<url for this webserver> AUDIO_STREAM_HOST=<host and port of grpc server> go run main.go
     ```
 
 3. Start gRPC server in another terminal instance
     ```bash
-    cd freeclimb-audio-stream-specification/examples/javascript
+    cd freeclimb-audio-stream-specification/examples/go
     go run main.go
     ```
 
