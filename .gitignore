@@ -165,3 +165,5 @@ tmp/*
 ivr_pb2*
 
 ngrok.*
+
+examples/javascript/node_modules

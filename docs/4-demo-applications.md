@@ -1,12 +1,20 @@
 # Demo Application(s)
 
-## Steps
+## Steps for all applications
 
 1. Determine how to expose application
     a. [ngrok](#ngrok) - allows local development but can be limited by firewalls and requires a ngrok account to proxy TCP traffic
     b. [directly](#direct-access) - requires a server and public IP space (or proxy that can handle gRPC/HTTP2)
+    
+2. Configure FreeClimb application to point at PerCL server
+    ![FreeClimb Application Config](./images/fc-application.png)
+3. Purchase and associate number with FreeClimb application
+    ![FreeClimb Number Config](./images/fc-number.png)
 
-2. Run gRPC server component to be exposed
+
+## Steps for python example application
+
+1. Run gRPC server component to be exposed
 
     ```bash
     git clone https://github.com/freeclimbapi/freeclimb-protobuf-specification
@@ -14,18 +22,13 @@
     ./setup.sh
     ```
 
-3. Configure PerCL server to serve AudioStream PerCL command pointing at gRPC component
+2. Configure PerCL server to serve AudioStream PerCL command pointing at gRPC component
 
     ```bash
     cd freeclimb-protobuf-specification/examples/python/server
     source venv/bin/activate
     WEBHOOK_HOST=<url for this webserver> AUDIO_STREAM_HOST=<host and port of grpc server> python3 webserver.py
     ```
-
-4. Configure FreeClimb application to point at PerCL server
-    ![FreeClimb Application Config](./images/fc-application.png)
-5. Purchase and associate number with FreeClimb application
-    ![FreeClimb Number Config](./images/fc-number.png)
 
 ## ngrok
 
@@ -44,9 +47,10 @@
             addr: 5001
 
     # start the ngrok tunnel
-    ngrok start http grpc
+    ngrok start grpc http
 
     # from the output you will need both tunnels to add to the WEBHOOK_HOST and AUDIO_STREAM_HOST above
+    # note that you may need to setup a https url and a forward that forwards url from the https url to the ngrok tcp url
     ```
 
 ## Direct Access
