@@ -19,7 +19,7 @@ percl = [
     {
         "AudioStream": {
             "location": {
-                "uri": f"http://{AUDIO_STREAM_HOST}"
+                "uri": f"{AUDIO_STREAM_HOST}"
             },
             "contentType": "audio/mulaw;rate=8000",
             "actionUrl": f"{WEBHOOK_HOST}/callback",
